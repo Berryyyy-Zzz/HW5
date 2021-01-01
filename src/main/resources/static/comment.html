@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>- 评论区</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+<link rel="shortcut icon" href="favicon.ico">
+<link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+<!-- Data Tables -->
+<link href="css/plugins/dataTables/dataTables.bootstrap.css"
+	rel="stylesheet">
+
+<link href="css/animate.css" rel="stylesheet">
+<link href="css/style.css?v=4.1.0" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+		<div><button type="button" class="btn btn-primary m-b" id="addBtn">发表评论</button></div>
+			<div class="col-sm-12" id="box">
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 全局js -->
+	<script src="js/jquery.min.js?v=2.1.4"></script>
+	<script src="js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+	<script src="js/plugins/jeditable/jquery.jeditable.js"></script>
+	<script src="js/plugins/layer/layer.min.js"></script>
+	<!-- Data Tables -->
+	<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+	<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+	<!-- Page-Level Scripts -->
+	<script type="text/javascript">
+	let str = window.location.href;
+	let id = str.split("=")[1];
+		$(function(){
+			findComment();
+
+			$("#addBtn").on("click",function(event){
+				layer.open({
+					type : 2,
+					area : [ '500px', '330px' ],
+					fixed : false, //不固定
+					maxmin : false,
+					title: "发表评论",
+					resize:false,
+					content : 'addComment.html?id='+id
+				});
+			})
+			$(document).on("click", "#box>div>div>div>.replyBtn", function(event) {
+				let id = $(this).attr("name");
+				layer.open({
+					type : 2,
+					area : [ '500px', '330px' ],
+					fixed : false, //不固定
+					maxmin : false,
+					title: "回复留言",
+					resize:false,
+					content : 'addMessage.html?id='+id
+				});
+			})
+		})
+		function getCookie(key) {
+			// 对cookie操作
+			var cookies = document.cookie;
+			cookies = cookies.replace(/\s*/g, "");
+			var cookie_array = cookies.split(";");
+			for (i = 0; i < cookie_array.length; i++) {
+				// yh_mch=lilei
+				var cookie = cookie_array[i];
+				var array = cookie.split("=");
+				if (array[0] == key) {
+					return array[1];
+				}
+			}
+			return null;
+		}
+		function reset(){
+			$("#box").html("");
+		}
+		function findComment(){
+			$
+			.ajax({
+				type : "POST",
+				url : "comment/findByLesson",
+				data : {lesson_id : id},
+				dataType : "json",
+				success : function(data) {
+					if (data != null) {
+						//reset();
+						const list = data;
+						for (let i = 0; i < list.length; i++) {
+							$("#box")
+									.append(
+											'<div class="ibox float-e-margins">'
+											+'<div class="ibox-title">'
+											+'</div>'
+											+'<div class="ibox-content">'
+											+'<h2>'+list[i].username+'</h2>&nbsp&nbsp'
+											+'<span>'+list[i].time+'</span><br>'
+											+'<label>'+list[i].content+'</label>'
+											+'<div><button class="btn btn-primary m-b replyBtn" type="button" name="'+list[i].id+'">回复</button></div>'
+											+'</div>'
+										+'</div>');
+						}
+						//checkIdentity(getCookie("identity"));
+					} else {
+						alert("获取数据失败，请重试");
+					}
+				},
+				error : function() {
+					alert("发生错误，请重试");
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

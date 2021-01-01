@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.LessonMapper">
+	<resultMap type="Lesson" id="lessonResultMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="teacher" column="teacher"/>
+		<result property="type" column="type"/>
+		<result property="content" column="content"/>
+		<result property="video" column="video"/>
+		<result property="time" column="time"/>
+	</resultMap>
+	<select id="findAll" resultMap="lessonResultMap">
+		select * from lesson
+	</select>
+	<select id="findByName" resultMap="lessonResultMap" parameterType="String">
+		select * from lesson where name like "%${name}%"
+	</select>
+	<select id="findByType" resultMap="lessonResultMap" parameterType="String">
+		select * from lesson where type = #{type}
+	</select>
+	<select id="findLesson" resultType="Lesson" parameterType="int">
+		select * from lesson where id = #{id}
+	</select>
+	<select id="findMyLesson" resultMap="lessonResultMap" parameterType="int">
+		select lesson.*
+		from collection,lesson where collection.user_id = #{user_id} and collection.lesson_id = lesson.id
+	</select>
+	<insert id="addCollection" parameterType="int">
+		insert into collection(user_id,lesson_id)values(#{user_id},#{lesson_id})
+	</insert>
+	<select id="isCollection" parameterType="int" resultType="String">
+		select id from collection where user_id=#{user_id} and lesson_id = #{lesson_id} limit 1
+	</select>
+</mapper>

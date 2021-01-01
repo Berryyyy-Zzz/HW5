@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 欢迎来到线上学习平台</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="css/plugins/steps/jquery.steps.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <h3>欢迎来到线上学习平台</h3>
+
+            <form class="m-t" role="form" action="">
+                <div class="form-group">
+                    <input type="text" id="username" class="form-control required" placeholder="用户名" autofocus>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" class="form-control required" placeholder="密码">
+                </div>
+                <button type="button" id="loginBtn" class="btn btn-primary m-b" style="width:48%">登 录</button>
+                <button type="button" id="register" class="btn btn-primary m-b" style="width:48%">注 册</button>
+            </form>
+           
+        </div>
+    </div>
+
+
+
+
+    <!-- 全局js -->
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+
+
+    <!-- Steps -->
+    <script src="js/plugins/staps/jquery.steps.min.js"></script>
+
+    <!-- Jquery Validate -->
+    <script src="js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="js/plugins/validate/messages_zh.min.js"></script>
+    <script src="layer/layer.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("#register").click(function(){
+			layer.open({
+				type : 2,
+				area : [ '500px', '600px' ],
+				fixed : false, //不固定
+				maxmin : false,
+				title:"注册",
+				resize:false,
+				content : 'register.html'
+			});
+	});
+	})
+	</script>
+    <script type="text/javascript">
+        $(function(){
+            $("#loginBtn").on('click',function(event){
+                if($("#username").val()==null||$("#username").val()==""||$("#password").val()==null||$("#password").val()==""){
+                    alert("输入框不能为空！");
+                    return;
+                }
+                $.ajax({
+                    type:"POST",
+                    url:"user/login",
+                    xhrFields: { withCredentials: true },
+                    data:{
+                        username:$("#username").val(),
+                        password:$("#password").val()
+                    },
+                    dataType:"json",
+                    success:function(data){
+                        if(data!=null&&data.result=="success"){
+                            alert(data.message);
+                            window.location.href="main.html"
+                        }else{
+                            alert(data.message);
+                            $("#username").val("");
+                            $("#password").val("");
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+</body>
+
+</html>

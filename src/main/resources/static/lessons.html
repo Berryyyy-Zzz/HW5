@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>- 课程列表</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+<link rel="shortcut icon" href="favicon.ico">
+<link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+<!-- Data Tables -->
+<link href="css/plugins/dataTables/dataTables.bootstrap.css"
+	rel="stylesheet">
+
+<link href="css/animate.css" rel="stylesheet">
+<link href="css/style.css?v=4.1.0" rel="stylesheet">
+<style type="text/css">
+	#type>ul>li{
+		float: left;
+	}
+	#type{
+		background-color: #7266ba;
+	}
+	#type>ul>li>a{
+		color: white;
+	}
+	#type>ul>li>a:hover{
+		background-color: #6254b2
+	}
+</style>
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>课程列表</h5>
+					</div>
+					<div class="ibox-content">
+						<form action="" id="search">
+							<input type="text" id="name" style="width: 200px">&nbsp&nbsp
+							<button type="button" id="searchBtn" class="btn btn-primary m-b"
+								style="width: 100px">搜索</button>
+						</form>
+						<div id="type">
+							<ul class="nav" id="side-menu">
+								<li><a href="">全部</a></li>
+								<li><a href="">计算机</a></li>
+								<li><a href="">人智</a></li>
+								<li><a href="">数媒</a></li>
+								<li><a href="">软工</a></li>
+							</ul>
+						</div>
+						<table class="table table-striped table-bordered table-hover "
+							id="editable">
+							<tr>
+								<th>课程编号</th>
+								<th>课程名称</th>
+								<th>讲解人</th>
+								<th>种类</th>
+								<th>发布时间</th>
+								<th style="width: 10%"></th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 全局js -->
+	<script src="js/jquery.min.js?v=2.1.4"></script>
+	<script src="js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+	<script src="js/plugins/jeditable/jquery.jeditable.js"></script>
+
+	<!-- Data Tables -->
+	<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+	<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+	<!-- 自定义js -->
+	<script src="js/content.js?v=1.0.0"></script>
+	<!-- Page-Level Scripts -->
+	<script type="text/javascript">
+		function getCookie(key) {
+			var val = "";
+			// 对cookie操作
+			var cookies = document.cookie;
+			cookies = cookies.replace(/\s*/g, "");
+			var cookie_array = cookies.split(";");
+			for (i = 0; i < cookie_array.length; i++) {
+				// yh_mch=lilei
+				var cookie = cookie_array[i];
+				var array = cookie.split("=");
+				if (array[0] == key) {
+					val = array[1];
+				}
+			}
+			return val;
+		}
+		function findByName() {
+			$
+					.ajax({
+						type : "POST",
+						url : "lesson/findByName",
+						data : {name : $("#name").val()},
+						dataType : "json",
+						success : function(data) {
+							if (data != null) {
+								const list = data;
+								reset();
+								for (let i = 0; i < list.length; i++) {
+									$("#editable")
+											.append(
+													"<tr><td>"
+															+ list[i].id
+															+ "</td><td>"
+															+ list[i].name
+															+ "</td><td>"
+															+ list[i].teacher
+															+ "</td>"
+															+ "<td>"
+															+ list[i].type
+															+ "</td>"
+															+ "<td>"
+															+ list[i].time
+															+ "</td>"
+															+ "<td class='operation'><a class='btn btn-primary m-b' href='lesson.html?id="+list[i].id+"'>详情</a></td></tr>");
+								}
+							} else {
+								alert("获取数据失败，请重试");
+							}
+						},
+						error : function() {
+							alert("发生错误，请重试");
+						}
+					});
+		}
+		function findByType(type) {
+			$
+					.ajax({
+						type : "POST",
+						url : "lesson/findByType",
+						data : {type : type},
+						dataType : "json",
+						success : function(data) {
+							if (data != null) {
+								const list = data;
+								reset();
+								for (let i = 0; i < list.length; i++) {
+									$("#editable")
+											.append(
+													"<tr><td>"
+															+ list[i].id
+															+ "</td><td>"
+															+ list[i].name
+															+ "</td><td>"
+															+ list[i].teacher
+															+ "</td>"
+															+ "<td>"
+															+ list[i].type
+															+ "</td>"
+															+ "<td>"
+															+ list[i].time
+															+ "</td>"
+															+ "<td class='operation'><a class='btn btn-primary m-b' href='lesson.html?id="+list[i].id+"'>详情</a></td></tr>");
+								}
+							} else {
+								alert("获取数据失败，请重试");
+							}
+						},
+						error : function() {
+							alert("发生错误，请重试");
+						}
+					});
+		}
+		function findAll() {
+			$
+			.ajax({
+				type : "POST",
+				url : "lesson/findAll",
+				dataType : "json",
+				success : function(data) {
+					if (data != null) {
+						const list = data;
+						reset();
+						for (let i = 0; i < list.length; i++) {
+							$("#editable")
+									.append(
+											"<tr><td>"
+													+ list[i].id
+													+ "</td><td>"
+													+ list[i].name
+													+ "</td><td>"
+													+ list[i].teacher
+													+ "</td>"
+													+ "<td>"
+													+ list[i].type
+													+ "</td>"
+													+ "<td>"
+													+ list[i].time
+													+ "</td>"
+													+ "<td class='operation'><a class='btn btn-primary m-b' href='lesson.html?id="+list[i].id+"'>详情</a></td></tr>");
+						}
+					} else {
+						alert("获取数据失败，请重试");
+					}
+				},
+				error : function() {
+					alert("发生错误，请重试");
+				}
+			});
+		}
+		function reset(){
+			$("#editable tr:not(:first)").html("");
+		}
+		$(function() {
+			findAll();
+			$("#searchBtn").on("click",function(){
+				findByName();
+			})
+			$("#type>ul>li>a").on("click",function(){
+				if($(this).html()=="全部"){
+					findAll();
+				}else{
+					findByType($(this).html());
+				}
+				return false;
+			})
+		})
+	</script>
+</body>
+
+</html>
